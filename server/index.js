@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const userRoutes = require("../server/routes/userRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 require("dotenv").config();
@@ -18,9 +18,9 @@ mongoose
     console.log("DB Connection SucceessFull");
   })
   .catch((err) => {
-    console.log(err.message);
+    console.log("not Connected Database", err.message);
   });
 
-const server = app.listen(process.env.PORT, () => {
-  console.log(`Server Started on Port ${process.env.PORT}`);
-});
+const server = app.listen(process.env.PORT, () =>
+  console.log(`Server started on ${process.env.PORT}`)
+);
