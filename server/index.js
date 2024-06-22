@@ -15,10 +15,10 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("DB Connection SucceessFull");
+    console.log("DB Connetion Successfull");
   })
   .catch((err) => {
-    console.log("not Connected Database", err.message);
+    console.log(err.message);
   });
 
 const server = app.listen(process.env.PORT, () =>
