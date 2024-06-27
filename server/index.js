@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const userRoutes = require("./routes/userRoutes");
 const messageRoute = require("./routes/messagesRoute");
 
+const socket = require("socket.io");
 const app = express();
 require("dotenv").config();
 
@@ -35,3 +36,25 @@ const server = app.listen(process.env.PORT, () => {
 
 // Additional log to ensure there are no other sources of 'undefined'
 console.log("Initialization complete. Awaiting requests...");
+
+const io = socket(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    credentials: true,
+  },
+});
+
+global.OnlineUsers = new Map();
+
+io.on("connection", (socket) => {
+  global.ChatSocket = socket;
+  socket.on("add-users", (userId) => {
+    OnlineUsers.set(userId, socket.id);
+  });
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = OnlineUsers.get(data.to);
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-receive", data.msg);
+    }
+  });
+});
